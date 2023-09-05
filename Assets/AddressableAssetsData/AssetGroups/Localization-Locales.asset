@@ -16,27 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 438220858b5df8d49b1d9570af64d124
-  m_SerializeEntries:
-  - m_GUID: ef547ecf0e34c984d8dbc37978629781
-    m_Address: id
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale
-  - m_GUID: 330a44cd73e246348a74f91b5a32933e
-    m_Address: English
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale
-  - m_GUID: d5aa6b5c4ca26a74aa7c2f47545f68e7
-    m_Address: English (en)
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale
-  - m_GUID: 928d231ba73e67f4caeb5f5a0c5b53d9
-    m_Address: Indonesian (Indonesia) (id-ID)
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale
+  m_SerializeEntries: []
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 42a9c19ff6db4934e9ef8b779a700f78, type: 2}
   m_SchemaSet:
