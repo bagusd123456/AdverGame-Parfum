@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ObjectContainer : MonoBehaviour
 {
     [NaughtyAttributes.Tag]
     public string objectTag;
 
-    public Quality objectTargetQuality = Quality.Common;
+    public Fragrance objectTargetFragrance = Fragrance.Fruity;
 
     public TMP_Text ObjectRequirementText;
     // Start is called before the first frame update
@@ -23,7 +24,7 @@ public class ObjectContainer : MonoBehaviour
     {
         if (ObjectRequirementText != null)
         {
-            ObjectRequirementText.text = $"Quality Target: {objectTargetQuality}";
+            ObjectRequirementText.text = $"Quality Target: {objectTargetFragrance}";
         }
     }
 

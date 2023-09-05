@@ -14,15 +14,17 @@ public class Mixing_MiniGameManager : MonoBehaviour
 
     public MixingState gameState = MixingState.Idle;
 
-
     public GameObject mixingQualityPanel;
     public GameObject mixingEffectPanel;
     public GameObject mixingStatePanel;
 
     public Slider mixingSlider;
+    public Image sliderFill;
     public float mixingSliderValue;
     public float mixingSliderSpeedMultiplier = 1f;
     public float mixingSliderDuration = 1f;
+
+    public ObjectData currentMixingData = new ObjectData();
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -39,23 +41,17 @@ public class Mixing_MiniGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
     }
 
     private void OnEnable()
     {
-        if (gameState == MixingState.Mix)
-        {
-            //LeanTouch.OnFingerDown += OnConfirm;
-        }
-        else
-        {
-            //LeanTouch.OnFingerDown -= OnConfirm;
-        }
+        LeanTouch.OnFingerDown += OnConfirm;
     }
 
     private void OnDisable()
     {
-        //LeanTouch.OnFingerDown -= OnConfirm;
+        LeanTouch.OnFingerDown -= OnConfirm;
     }
 
     // Update is called once per frame
@@ -79,7 +75,15 @@ public class Mixing_MiniGameManager : MonoBehaviour
             mixingQualityPanel.SetActive(false);
             mixingStatePanel.SetActive(true);
             UpdateSliderValue();
-
+            
+            if (mixingSliderValue > 0.3 && mixingSliderValue < 0.7)
+            {
+                sliderFill.color = Color.green;
+            }
+            else
+            {
+                sliderFill.color = Color.white;
+            }
         }
         else if (gameState == MixingState.Finish)
         {
@@ -101,6 +105,37 @@ public class Mixing_MiniGameManager : MonoBehaviour
         mixingSlider.value = mixingSliderValue;
     }
 
+    public void ChangeStatePickQuality()
+    {
+        gameState = MixingState.PickQuality;
+    }
+
+    public void ChangeStatePickEffect()
+    {
+        gameState = MixingState.PickEffect;
+    }
+
+    public void ChangeStateMix()
+    {
+        gameState = MixingState.Mix;
+    }
+
+    public void ConfirmPickFragrance(Fragrance fragrance)
+    {
+        currentMixingData.objectFragrance = fragrance;
+    }
+
+    public void ConfirmPickStrength(Strength strength)
+    {
+        currentMixingData.objectStrength = strength;
+    }
+
+    public void ClearSelection()
+    {
+        currentMixingData = new ObjectData();
+        gameState = MixingState.Idle;
+    }
+
     public void OnConfirm(LeanFinger finger)
     {
         if (gameState == MixingState.Mix)
@@ -108,6 +143,7 @@ public class Mixing_MiniGameManager : MonoBehaviour
             if (mixingSliderValue > 0.3 && mixingSliderValue < 0.7)
             {
                 gameState = MixingState.Finish;
+                CustomerOrderManager.Instance.AcceptOrder(currentMixingData);
                 Debug.Log("Mixing Success");
             }
             else

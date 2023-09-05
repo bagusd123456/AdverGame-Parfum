@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public enum Quality
+public enum Fragrance
 {
-    Common, Uncommon, Rare,
-    Epic, Legendary
+    None, Fruity, Aromatic, Woody,
+    Floral, Citrus
 }
-public enum Effect
+public enum Strength
 {
-    None, Single, Double,
-    Triple, Quadruple, Quintuple,
-    Sextuple
+    None, Durable, Momentary
 }
 
 [CreateAssetMenu(fileName = "ObjectName_objectSO", menuName = "SO/Create NewObject")]
@@ -20,7 +19,7 @@ public class ObjectData_SO : ScriptableObject
     public string objectName = "Object_Undefined";
     public Sprite objectSprite;
     [Space]
-    public Quality objectQuality = Quality.Common;
+    public Fragrance objectFragrance = Fragrance.Fruity;
 
-    public Effect objectEffect = Effect.Single;
+    public Strength objectStrength = Strength.Durable;
 }

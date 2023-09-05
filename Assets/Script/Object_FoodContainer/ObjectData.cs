@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class ObjectData
@@ -10,10 +11,10 @@ public class ObjectData
     public ObjectData_SO objectInitialData;
     public string objectName = "Object_Undefined";
     public Sprite objectSprite;
-    [Space]
-    public Quality objectQuality = Quality.Common;
+    [FormerlySerializedAs("objectQuality")] [Space]
+    public Fragrance objectFragrance = Fragrance.Fruity;
 
-    public Effect objectEffect = Effect.Single;
+    [FormerlySerializedAs("objectEffect")] public Strength objectStrength = Strength.Durable;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +32,7 @@ public class ObjectData
     {
         objectName = objectInitialData.objectName;
         objectSprite = objectInitialData.objectSprite;
-        objectQuality = objectInitialData.objectQuality;
-        objectEffect = objectInitialData.objectEffect;
+        objectFragrance = objectInitialData.objectFragrance;
+        objectStrength = objectInitialData.objectStrength;
     }
 }

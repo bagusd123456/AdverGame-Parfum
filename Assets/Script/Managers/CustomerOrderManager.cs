@@ -46,6 +46,7 @@ public class CustomerOrderManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GenerateOrder();
         UpdateOrderNotes();
     }
 
@@ -133,7 +134,7 @@ public class CustomerOrderManager : MonoBehaviour
         ObjectData data = new ObjectData();
 
         //data.objectEffect = (Effect)Random.Range(0, (int)Effect.Sextuple + 1);
-        data.objectQuality = (Quality)Random.Range(0, (int)Quality.Legendary + 1);
+        data.objectFragrance = (Fragrance)Random.Range(1, (int)Fragrance.Citrus + 1);
 
         //targetData = data;
         return data;
@@ -142,12 +143,12 @@ public class CustomerOrderManager : MonoBehaviour
     public bool CheckOrderCompletionRate(ObjectData orderData, ObjectData objectData)
     {
         int completionRate = 0;
-        if (orderData.objectQuality == objectData.objectQuality)
+        if (orderData.objectFragrance == objectData.objectFragrance)
         {
             completionRate++;
         }
 
-        if (orderData.objectEffect == objectData.objectEffect)
+        if (orderData.objectStrength == objectData.objectStrength)
         {
             //completionRate++;
         }
@@ -168,6 +169,13 @@ public class CustomerOrderManager : MonoBehaviour
 
     public static bool IsAnyOrderFound()
     {
-        return false;
+        if (Instance.currentOrder.Count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

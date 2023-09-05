@@ -37,8 +37,8 @@ public class UI_OrderNotesController : MonoBehaviour
 
     public void UpdateNotesInfo()
     {
-        orderQuality.text = CustomerOrderManager.Instance.currentOrder[notesIndex].objectQuality.ToString();
-        orderEffect.text = CustomerOrderManager.Instance.currentOrder[notesIndex].objectEffect.ToString();
+        orderQuality.text = CustomerOrderManager.Instance.currentOrder[notesIndex].objectFragrance.ToString();
+        orderEffect.text = CustomerOrderManager.Instance.currentOrder[notesIndex].objectStrength.ToString();
     }
 
     public void HideNotes()
