@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/OrderScene.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  m_configObjects:
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 9e621378f980f3e45b778e035a83e70e, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 9ea7dab9aec8f8240b336667b976b9bf, type: 2}
+    com.unity.addressableassets: {fileID: 11400000, guid: 4a0973e05194d1742aa2d9a0387ac856, type: 2}
+    com.unity.localization.addressable-group-rules: {fileID: 11400000, guid: 1c27eacf2e1a5ce49b9bbf1943c77f06, type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 8a35dd4ad9ba4624a96b9952f87e38df, type: 2}
