@@ -2,6 +2,8 @@ using Lean.Touch;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -14,9 +16,24 @@ public class Mixing_MiniGameManager : MonoBehaviour
 
     public MixingState gameState = MixingState.Idle;
 
+    public static Action OnVariableChange;
+
+    public MixingState GameState
+    {
+        get { return gameState; }
+
+        set
+        {
+            if (gameState == value) return;
+            gameState = value;
+            OnVariableChange?.Invoke();
+        }
+    }
+
     public GameObject mixingQualityPanel;
     public GameObject mixingEffectPanel;
     public GameObject mixingStatePanel;
+    public bool animationPlayed = false;
 
     public Slider mixingSlider;
     public Image sliderFill;
@@ -47,35 +64,21 @@ public class Mixing_MiniGameManager : MonoBehaviour
     private void OnEnable()
     {
         LeanTouch.OnFingerDown += OnConfirm;
+        OnVariableChange += PreviewUI;
     }
 
     private void OnDisable()
     {
         LeanTouch.OnFingerDown -= OnConfirm;
+        OnVariableChange -= PreviewUI;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (gameState == MixingState.PickQuality)
+        if (mixingStatePanel.activeSelf)
         {
-            mixingQualityPanel.SetActive(true);
-            mixingEffectPanel.SetActive(false);
-            mixingStatePanel.SetActive(false);
-        }
-        else if (gameState == MixingState.PickEffect)
-        {
-            mixingQualityPanel.SetActive(false);
-            mixingEffectPanel.SetActive(true);
-            mixingStatePanel.SetActive(false);
-        }
-        else if (gameState == MixingState.Mix)
-        {
-            mixingEffectPanel.SetActive(false);
-            mixingQualityPanel.SetActive(false);
-            mixingStatePanel.SetActive(true);
             UpdateSliderValue();
-            
             if (mixingSliderValue > 0.3 && mixingSliderValue < 0.7)
             {
                 sliderFill.color = Color.green;
@@ -85,18 +88,55 @@ public class Mixing_MiniGameManager : MonoBehaviour
                 sliderFill.color = Color.white;
             }
         }
-        else if (gameState == MixingState.Finish)
+        PreviewUI();
+    }
+
+    [Button("Preview UI")]
+    public void PreviewUI()
+    {
+        if (animationPlayed) return;
+
+        mixingQualityPanel.SetActive(false);
+        mixingEffectPanel.SetActive(false);
+        mixingStatePanel.SetActive(false);
+
+        if (gameState == MixingState.PickQuality)
         {
-            mixingQualityPanel.SetActive(false);
-            mixingEffectPanel.SetActive(false);
-            mixingStatePanel.SetActive(false);
+            ShowPanel(mixingQualityPanel.GetComponent<RectTransform>());
         }
-        else if (gameState == MixingState.Idle)
+        else if (gameState == MixingState.PickEffect)
         {
-            mixingQualityPanel.SetActive(false);
-            mixingEffectPanel.SetActive(false);
-            mixingStatePanel.SetActive(false);
+            ShowPanel(mixingEffectPanel.GetComponent<RectTransform>());
         }
+        else if (gameState == MixingState.Mix)
+        {
+            mixingStatePanel.SetActive(true);
+        }
+
+        animationPlayed = true;
+    }
+
+    [Button("Change State")]
+    public void ChangeState()
+    {
+        animationPlayed = false;
+    }
+
+    public void ShowPanel(RectTransform targeTransform)
+    {
+        targeTransform.gameObject.SetActive(true);
+        targeTransform.anchoredPosition = Vector3.down * targeTransform.sizeDelta.y;
+        //Show the panel
+        Tween anim = targeTransform.DOAnchorPos(Vector3.zero, .5f);
+        anim.SetEase(Ease.InOutSine);
+    }
+
+    public void HidePanel(RectTransform targeTransform)
+    {
+        //hide the panel
+        Tween anim = targeTransform.DOAnchorPos(Vector3.down * targeTransform.sizeDelta.y, .5f);
+        anim.SetEase(Ease.InOutSine);
+        anim.onComplete += () => targeTransform.gameObject.SetActive(false);
     }
 
     public void UpdateSliderValue()
@@ -108,16 +148,19 @@ public class Mixing_MiniGameManager : MonoBehaviour
     public void ChangeStatePickQuality()
     {
         gameState = MixingState.PickQuality;
+        ChangeState();
     }
 
     public void ChangeStatePickEffect()
     {
         gameState = MixingState.PickEffect;
+        ChangeState();
     }
 
     public void ChangeStateMix()
     {
         gameState = MixingState.Mix;
+        ChangeState();
     }
 
     public void ConfirmPickFragrance(Fragrance fragrance)
@@ -134,6 +177,7 @@ public class Mixing_MiniGameManager : MonoBehaviour
     {
         currentMixingData = new ObjectData();
         gameState = MixingState.Idle;
+        ChangeState();
     }
 
     public void OnConfirm(LeanFinger finger)
@@ -144,6 +188,7 @@ public class Mixing_MiniGameManager : MonoBehaviour
             {
                 gameState = MixingState.Finish;
                 CustomerOrderManager.Instance.AcceptOrder(currentMixingData);
+                ChangeState();
                 Debug.Log("Mixing Success");
             }
             else
