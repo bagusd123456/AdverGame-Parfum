@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Yarn.Unity;
 
 public class Mixing_MiniGameManager : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class Mixing_MiniGameManager : MonoBehaviour
         }
     }
 
+    public Button btnStartMix;
+
     public GameObject mixingQualityPanel;
     public GameObject mixingEffectPanel;
     public GameObject mixingStatePanel;
@@ -42,6 +45,7 @@ public class Mixing_MiniGameManager : MonoBehaviour
     public float mixingSliderDuration = 1f;
 
     public ObjectData currentMixingData = new ObjectData();
+    public DialogueRunner dialogue;
     private void Awake()
     {
         // If there is an instance, and it's not me, delete myself.
@@ -127,16 +131,26 @@ public class Mixing_MiniGameManager : MonoBehaviour
         targeTransform.gameObject.SetActive(true);
         targeTransform.anchoredPosition = Vector3.down * targeTransform.sizeDelta.y;
         //Show the panel
-        Tween anim = targeTransform.DOAnchorPos(Vector3.zero, .5f);
-        anim.SetEase(Ease.InOutSine);
+        Tween anim = targeTransform.DOAnchorPos(Vector3.zero, .25f);
+        anim.SetEase(Ease.OutQuad);
     }
 
     public void HidePanel(RectTransform targeTransform)
     {
         //hide the panel
-        Tween anim = targeTransform.DOAnchorPos(Vector3.down * targeTransform.sizeDelta.y, .5f);
-        anim.SetEase(Ease.InOutSine);
+        Tween anim = targeTransform.DOAnchorPos(Vector3.down * targeTransform.sizeDelta.y, .25f);
+        anim.SetEase(Ease.InQuad);
         anim.onComplete += () => targeTransform.gameObject.SetActive(false);
+    }
+
+    public void ShowMixButton()
+    {
+        btnStartMix.gameObject.SetActive(true);
+    }
+
+    public void HideMixButton()
+    {
+        btnStartMix.gameObject.SetActive(false);
     }
 
     public void UpdateSliderValue()
@@ -189,10 +203,14 @@ public class Mixing_MiniGameManager : MonoBehaviour
                 gameState = MixingState.Finish;
                 CustomerOrderManager.Instance.AcceptOrder(currentMixingData);
                 ChangeState();
+                dialogue.StartDialogue("MixingSuccess");
                 Debug.Log("Mixing Success");
             }
             else
             {
+                gameState = MixingState.Finish;
+                ChangeState();
+                dialogue.StartDialogue("MixingFailed");
                 Debug.LogWarning("Mixing Failed");
             }
         }
